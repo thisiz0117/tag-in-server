@@ -1,5 +1,6 @@
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -11,6 +12,13 @@ import { Module } from '@nestjs/common';
         lazyConnect: true
       },
       type: 'single'
+    }),
+    TypeOrmModule.forRoot({
+      type: 'postgres',
+      username: process.env.DB_USER,
+      password: process.env.DB_PASSWORD,
+      database: process.env.DB_NAME,
+      synchronize: process.env.IS_PRODUCTION === 'false' ? true : false
     })
   ],
   controllers: [],
