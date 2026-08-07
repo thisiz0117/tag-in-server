@@ -2,8 +2,9 @@ import { RedisModule } from '@nestjs-modules/ioredis'
 import { Module } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module'
-import { ConfigModule } from '@nestjs/config'
+import { ConfigModule, ConfigService } from '@nestjs/config'
 import { UserModule } from './user/user.module'
+import { JwtModule } from '@nestjs/jwt'
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { UserModule } from './user/user.module'
       autoLoadEntities: true,
       synchronize: process.env.IS_PRODUCTION === 'false' ? true : false,
     }),
+    JwtModule.register({}),
     AuthModule,
     UserModule,
   ],

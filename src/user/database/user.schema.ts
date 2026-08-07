@@ -12,7 +12,7 @@ import { UserStatus } from './status.enum'
 @Entity('users')
 export class Users {
   @PrimaryGeneratedColumn('uuid')
-  id!: number
+  id!: string
 
   @Column({ unique: true })
   email!: string
