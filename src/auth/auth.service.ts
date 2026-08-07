@@ -5,7 +5,7 @@ import { Users } from '../user/database/user.schema'
 import { Repository } from 'typeorm'
 import { Roles } from '../user/database/roles.enum'
 import { UserStatus } from '../user/database/status.enum'
-import { UserRequestContextDto } from '../dto/user-req-context.dto';
+import { RequestUserContextDto } from '../dto/request-user-context.dto.';
 
 @Injectable()
 export class AuthService {
@@ -14,7 +14,7 @@ export class AuthService {
     private readonly usersRepository: Repository<Users>,
   ) {}
 
-  async upsert(user: UserPayloadDto): Promise<UserRequestContextDto> {
+  async upsert(user: UserPayloadDto): Promise<RequestUserContextDto> {
     const result = await this.usersRepository
       .createQueryBuilder()
       .insert()
@@ -29,7 +29,7 @@ export class AuthService {
         status: UserStatus.ACTIVE,
       })
       .orUpdate([], ['provider_sub'])
-      .returning(['id', 'role', 'status'])
+      .returning(['id', 'email', 'name', 'profile', 'role', 'status', 'createdAt', 'updatedAt'])
       .execute()
 
     return result.raw[0]
