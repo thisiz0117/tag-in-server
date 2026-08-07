@@ -25,6 +25,7 @@ import { UserModule } from './user/user.module'
       username: process.env.DB_USER,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
+      autoLoadEntities: true,
       synchronize: process.env.IS_PRODUCTION === 'false' ? true : false,
     }),
     AuthModule,
