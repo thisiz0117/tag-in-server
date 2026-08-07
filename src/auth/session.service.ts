@@ -1,7 +1,7 @@
 import { Injectable, InternalServerErrorException, UnauthorizedException } from '@nestjs/common'
 import { InjectRepository } from '@nestjs/typeorm'
 import { Users } from '../user/database/user.schema'
-import { Repository } from 'typeorm'
+import { In, Repository } from 'typeorm'
 import { InjectRedis } from '@nestjs-modules/ioredis'
 import { Redis } from 'ioredis'
 import { type Request, type Response } from 'express'
@@ -130,5 +130,23 @@ export class SessionService {
     }
   }
 
-  async revoke(id: string): Promise<void> {}
+  async revoke(req: Request, res: Response): Promise<void> {
+    const accessTokenCookie = req.cookies['__HOST-ACS']
+    if (accessTokenCookie) res.clearCookie('__HOST-ACS')
+
+    const refreshTokenCookie = req.cookies['__HOST-REF']
+    res.clearCookie('__HOST-REF')
+
+    const refreshTokenJWT = await this.jwtService.verifyAsync<RefreshTokenPayloadDto>(refreshTokenCookie, {
+      secret: this.configService.get<string>('REFRESH_TOKEN_SECRET')!,
+    })
+
+    try {
+      const { id, jti } = refreshTokenJWT
+      const isSuccessDel = await this.redis.del(`refresh:${id}:${jti}`)
+      if (!isSuccessDel) throw new InternalServerErrorException('로그아웃 중 문제가 발생했습니다.')
+    } catch (e) {
+      throw new InternalServerErrorException('로그아웃 중 데이터베이스에서 문제가 발생했습니다.')
+    }
+  }
 }
