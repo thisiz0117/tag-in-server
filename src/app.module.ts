@@ -1,6 +1,8 @@
 import { RedisModule } from '@nestjs-modules/ioredis';
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { AuthModule } from './auth/auth.module';
+import { ConfigModule } from '@nestjs/config';
 
 @Module({
   imports: [
@@ -19,7 +21,12 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
       synchronize: process.env.IS_PRODUCTION === 'false' ? true : false
-    })
+    }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      envFilePath: '.env'
+    }),
+    AuthModule
   ],
   controllers: [],
   providers: [],
