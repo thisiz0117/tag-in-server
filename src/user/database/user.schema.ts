@@ -1,5 +1,13 @@
-import { Column, CreateDateColumn, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm'
-import { Roles } from './role.schema'
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm'
+import { Providers } from './providers.enum'
+import { Roles } from './roles.enum'
+import { UserStatus } from './status.enum'
 
 @Entity('users')
 export class Users {
@@ -16,16 +24,16 @@ export class Users {
   profile!: string
 
   @Column()
-  provider!: 'google' | 'naver'
+  provider!: Providers
 
   @Column({ unique: true })
   provider_sub!: string
 
-  @ManyToOne(() => Roles, (role) => role.users, {
-    onDelete: 'SET NULL',
-  })
-  @JoinColumn()
-  role_id!: Roles
+  @Column()
+  role!: Roles
+
+  @Column()
+  status!: UserStatus
 
   @CreateDateColumn()
   createdAt!: Date
