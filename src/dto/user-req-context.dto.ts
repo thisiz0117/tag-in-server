@@ -4,7 +4,7 @@ import { UserStatus } from "../user/database/status.enum";
 
 export class UserRequestContextDto {
   @IsNumber()
-  id!: number
+  id!: string
 
   @IsEnum(Roles)
   @IsString()
