@@ -8,9 +8,9 @@ import { type Request, type Response } from 'express'
 import { JwtService } from '@nestjs/jwt'
 import { instanceToPlain, plainToClass } from 'class-transformer'
 import { ConfigService } from '@nestjs/config'
-import { RefreshTokenPayloadDto } from '../dto/refresh-token-payload.dto'
-import { RequestUserContextDto } from '../dto/request-user-context.dto.'
-import { AccessTokenPayloadDto } from '../dto/access-token-payload.dto'
+import { RefreshTokenPayloadDto } from './dto/refresh-token-payload.dto';
+import { RequestUserContextDto } from './dto/request-user-context.dto.';
+import { AccessTokenPayloadDto } from './dto/access-token-payload.dto';
 
 @Injectable()
 export class SessionService {
