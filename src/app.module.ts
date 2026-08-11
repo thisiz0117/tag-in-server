@@ -2,11 +2,11 @@ import { RedisModule } from '@nestjs-modules/ioredis'
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common'
 import { TypeOrmModule } from '@nestjs/typeorm'
 import { AuthModule } from './auth/auth.module'
-import { ConfigModule, ConfigService } from '@nestjs/config'
+import { ConfigModule } from '@nestjs/config'
 import { UserModule } from './user/user.module'
 import { JwtModule } from '@nestjs/jwt'
 import { MediaModule } from './media/media.module';
-import { AuthMiddleware } from './common/middleware/auth-user/auth.middleware';
+import { AuthUserMiddleware } from './common/middleware/auth-user/auth-user.middleware';
 
 @Module({
   imports: [
@@ -41,6 +41,6 @@ import { AuthMiddleware } from './common/middleware/auth-user/auth.middleware';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    consumer.apply(AuthMiddleware).forRoutes('*')
+    consumer.apply(AuthUserMiddleware).forRoutes('*')
   }
 }
