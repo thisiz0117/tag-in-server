@@ -13,23 +13,17 @@ export class AuthUserMiddleware implements NestMiddleware {
 
   async use(req: Request, res: Response, next: NextFunction) {
     const accessTokenCookie = req.cookies['__HOST-ACS']
-    try {
-      const accessTokenPayload = await this.jwtService.verifyAsync<AccessTokenPayloadDto>(accessTokenCookie, {
-        secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
-      })
-      req['user'] = accessTokenPayload
-    } catch (e) {
-      throw new UnauthorizedException('인증 정보 일부가 유실되었습니다.')
+    if (accessTokenCookie) {
+      try {
+        const accessTokenPayload = await this.jwtService.verifyAsync<AccessTokenPayloadDto>(accessTokenCookie, {
+          secret: this.configService.get<string>('ACCESS_TOKEN_SECRET'),
+        })
+        req['user'] = accessTokenPayload
+      } catch (e) {
+        req['user'] = null
+      }
     }
-
-    try {
-      const refreshTokenCookie = req.cookies['__HOST-REF']
-      await this.jwtService.verifyAsync(refreshTokenCookie, {
-        secret: this.configService.get<string>('REFRESH_TOKEN_SECRET'),
-      })
-    } catch (e) {
-      throw new UnauthorizedException('재인증 정보 일부가 유실되었습니다.')
-    }
+    req['user'] = null
 
     next()
   }
